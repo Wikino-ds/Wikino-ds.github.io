@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.53">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>O Problema do Caixeiro Viajante com o Programação Linear e o Método DFJ</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="jupyter_notebook_files/libs/clipboard/clipboard.min.js"></script>
+<script src="jupyter_notebook_files/libs/quarto-html/quarto.js"></script>
+<script src="jupyter_notebook_files/libs/quarto-html/popper.min.js"></script>
+<script src="jupyter_notebook_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="jupyter_notebook_files/libs/quarto-html/anchor.min.js"></script>
+<link href="jupyter_notebook_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="jupyter_notebook_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="jupyter_notebook_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="jupyter_notebook_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="jupyter_notebook_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">O Problema do Caixeiro Viajante com o Programação Linear e o Método DFJ</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>
+Autor: <a href="https://www.linkedin.com/in/vinicius-aquino-in/" target="_blank" rel="noopener noreferrer">Vinicius Aquino</a>
+</p>
+<p>
+Data: 01/09/2024
+</p>
+<section id="resumo" class="level2">
+<h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
+<p>O texto se propõe a discutir o problema do Caixeiro Viajante no contexto de Programação Linear usando a biblioteca gurobipy. Foram usado os dados de localização dos estádios da Série A do campeaonto brasileiro para a análise e o método DFJ para a eliminação de subrotas.</p>
+</section>
+<section id="o-problema-do-caixeiro-viajante" class="level2">
+<h2 class="anchored" data-anchor-id="o-problema-do-caixeiro-viajante">O Problema do Caixeiro Viajante</h2>
+<p>O problema do caixeiro viajante (ou Traveling Salesman) é o problema onde temos um indíviduo que deseja visitar <span class="math inline">\(n\)</span> cidades de forma que visite cada cidade somente uma vez e volte na sua origem percorrendo a menor distância possível. É um problema clássico da otimização devido à sua velocidade de aumento de complexidade computacional. Quando temos somente <span class="math inline">\(4\)</span> cidades, por exemplo, há somente <span class="math inline">\(3\)</span> possibilidades de rotas. Todavia, esse espaço de possibildades cresce de forma exponencial conforme <span class="math inline">\(n\)</span> cresce. Sendo <span class="math inline">\(S\)</span> o espaço de busca da melhor rota, então o tamanho de <span class="math inline">\(S\)</span> é dado por: <span class="math display">\[C_{n, 2} = \frac{(n-1)!}{2}\]</span></p>
+<p>No caso, usando os 19 estádios da Série A do Brasileirão 2024, temos 3.201.186.852.864.000 (três quadrilhões, duzentos e um trilhões, cento e oitenta e seis bilhões, oitocentos e cinquenta e 2 milhões, oitocentos e secenta e quatro mil) possibilidades de rota. Nesse caso, você já pode imaginar que, por mais trivial que seja o cálculo da distância total dessa rota, é impossível testar todas as possibilidades, o que nos exige uma forma robusta de encontrar a solução ótima.</p>
+<p>Apesar de parecer um problema abstrato, não faltam aplicações desse problema na “vida real”. Por exemplo, no contexto de logística, um caminhão que saí de um hub para abastecer uma rede de suprimento vai passar por todos os pontos e, por fim, voltar para o seu hub. Nesse caso, a definição da sua rota pode ser encarada como um Problema do Caixeiro Viajante.</p>
+</section>
+<section id="a-abordagem-da-programação-linear" class="level2">
+<h2 class="anchored" data-anchor-id="a-abordagem-da-programação-linear">A Abordagem da Programação Linear</h2>
+<p>O último parágrafo pode ter te assutado, afinal, todas as vezes que um entregador da Amazon saí com 20 pacotes para entregar, ele tem que pensar em qual das dezenas de quadrilhões de rotas ele deve seguir durante o seu dia. Mas calma, há formas de se resolver esse problema. No caso, o approach a ser implementado será o da Programação Linear (PL). Não é minha intenção ensinar como “pensa” a abordagem da programação linear, porque isso tornaria o texto excessivamente extenso. Todavia, o que você precisa entender é que em um problema de Programação Linear temos variáveis de decisão, que é o que queremos otimizar, uma função objetivo linear e restrições lineares.</p>
+</section>
+<section id="resolvendo-o-problema-do-caixeiro-viajante-para-os-estádios-da-série-a-do-brasileirão-2024" class="level2">
+<h2 class="anchored" data-anchor-id="resolvendo-o-problema-do-caixeiro-viajante-para-os-estádios-da-série-a-do-brasileirão-2024">Resolvendo O Problema do Caixeiro Viajante para os Estádios da Série A do Brasileirão 2024</h2>
+<section id="definindo-o-problema" class="level3">
+<h3 class="anchored" data-anchor-id="definindo-o-problema">Definindo o Problema:</h3>
+<p>O primeiro passo para resolver um problema de Programação Linear é definir quem serão nossas variáveis. No caso, defineremos <span class="math inline">\(x_{ij}\)</span> como uma variável binária de decisão que define se o nosso caixeiro viajante sairá do estádio <span class="math inline">\(i\)</span> para o estádio <span class="math inline">\(j\)</span> (algo como: quando estivermos no Morumbi, vamos para o Maracanã? Ou quem sabe o Mineirão?):</p>
+<p><b><span class="math inline">\(x_{ij}\)</span> -&gt; Se, ao estar no estádio <span class="math inline">\(i\)</span>, o caixeiro seguirá para o estádio <span class="math inline">\(j\)</span> </b><br></p>
+<p>Outra variável importante é o custo <span class="math inline">\(c_{ij}\)</span> de ir do estádio i para o estádio j (algo como: afinal, qual o custo de tomar a decisão de ir do Morumbi para o Maracanã?):</p>
+<p><b><span class="math inline">\(c_{ij}\)</span> -&gt; Custo de, ao estar no estádio <span class="math inline">\(i\)</span>, seguir para o estádio <span class="math inline">\(j\)</span> </b><br></p>
+<p>Repare na palavra custo. Ela não está aí a toa. No nosso caso, o custo vai ser a distância. Mais precisamente a distância euclidiana das latitudes e longitudes dos estádios. Poderia ser o tempo, por exemplo. Poderia ser um custo financeiro ou ambiental (emissão de carbono). <br></p>
+<p>Definida, então, essas variáveis, já podemos partir para a função objetivo, que é quem minimizaremos:</p>
+<p><span class="math display">\[\text{Minimizar} \quad Z = \sum_{i=1}^{n} \sum_{j=1}^{n} c_{ij} \cdot x_{ij}\]</span></p>
+<p>Não se assuste. Nossa função objetivo basicamente diz que custo total (que desejamos minimizar) será algo como:</p>
+<p>(custo de ir do Morumbi para o Maracanã) * (decisão de ir do Morumbi para o Maracanã) + (custo de ir do Morumbi para o Mineirão) * (decisão de ir do Morumbi para o Maracanã) + … + (custo de ir do Maracanã para o Morumbi) * (decisão de ir do Maracanã para o Mineirão) + …</p>
+<p>A maior parte dessas variáveis de decisões vão ter valor 0, afinal, nossa rota tem 19 estádios.</p>
+<p>Além disso, devemos adicionar algumas regras para o modelo não encontrar uma solução que não faz sentido para o nosso problema, por exemplo: o caixeiro não pode ficar no mesmo lugar. Então:</p>
+<p><span class="math inline">\(x_{ii} = 0\)</span>, para i = 1, 2, 3, … n</p>
+<p>Além disso, ele tem que visitar todos os pontos:</p>
+<p><span class="math inline">\(\sum_{i=1}^{n} x_{ij} = 1\)</span>, para j = 1, 2, 3, … n</p>
+<p>Isso é algo como: Eu tenho que ir para o Morumbi, seja pelo Maracanã, seja pelo Mineirão, seja pelo Castelão…</p>
+<p><span class="math inline">\(\sum_{j=1}^{n} x_{ij} = 1\)</span> , para i = 1, 2, 3, … n</p>
+<p>Isso é algo como: A partir do Morumbi eu tenho que ir ou para o Maracanã, ou do Mineirão, ou do Castelão… Não posso sair de um lugar para dois ou mais.</p>
+<p>Deixando o nosso problema de PL na forma padrão:</p>
+<p><span class="math inline">\(\text{Minimizar} \quad Z = \sum_{i=1}^{n} \sum_{j=1}^{n} c_{ij} \cdot x_{ij}\)</span></p>
+<p>sa:</p>
+<p><span class="math inline">\(x_{ii} = 0\)</span> <br> <span class="math inline">\(\sum_{i=1}^{n} x_{ij} = 1\)</span> <br> <span class="math inline">\(\sum_{j=1}^{n} x_{ij} = 1\)</span> <br></p>
+<p>Sendo <span class="math inline">\(x_{ij}\)</span> variáveis binárias.</p>
+</section>
+<section id="implementando-com-python-e-gurobi" class="level3">
+<h3 class="anchored" data-anchor-id="implementando-com-python-e-gurobi">Implementando com Python e Gurobi</h3>
+<p>Pacotes a serem usados:</p>
+<div id="cell-7" class="cell" data-execution_count="203">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manipular dados</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Otimização</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gurobipy <span class="im">as</span> gp</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gurobipy <span class="im">import</span> GRB</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Utils</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.spatial <span class="im">import</span> distance_matrix</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">"ggplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Importando dados e plotando vizualização dos pontos:</p>
+<div id="cell-9" class="cell" data-execution_count="204">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>geo_plot <span class="op">=</span> gpd.read_file(<span class="st">"bcim_2016_21_11_2018.gpkg"</span>, layer<span class="op">=</span><span class="st">"lim_unidade_federacao_a"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"estadios_data.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="204">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">estadio</th>
+<th data-quarto-table-cell-role="th">latitude</th>
+<th data-quarto-table-cell-role="th">longitude</th>
+<th data-quarto-table-cell-role="th">clube</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>Maracanã</td>
+<td>-22.912</td>
+<td>-43.230</td>
+<td>Flamengo/ Fluminense</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>Morumbis</td>
+<td>-23.600</td>
+<td>-46.719</td>
+<td>São Paulo</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>Mineirão</td>
+<td>-19.866</td>
+<td>-43.971</td>
+<td>Cruzeiro</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>Arena Grêmio</td>
+<td>-30.022</td>
+<td>-51.213</td>
+<td>Grêmio</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>Castelão</td>
+<td>-3.826</td>
+<td>-38.539</td>
+<td>Fortaleza</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="cell-10" class="cell" data-execution_count="205">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(df.longitude, df.latitude)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Os 19 Estádios da Série A"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Calculando distancias (a variável <span class="math inline">\(c_{ij}\)</span>):</p>
+<div id="cell-12" class="cell" data-execution_count="206">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_distancia <span class="op">=</span> pd.DataFrame(distance_matrix(df[[<span class="st">"latitude"</span>, <span class="st">"longitude"</span>]].values,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                                            df[[<span class="st">"latitude"</span>, <span class="st">"longitude"</span>]].values),</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                            index<span class="op">=</span>df.estadio,columns<span class="op">=</span>df.estadio)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_distancia.iloc[:<span class="dv">8</span>, :<span class="dv">8</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="206">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">estadio</th>
+<th data-quarto-table-cell-role="th">Maracanã</th>
+<th data-quarto-table-cell-role="th">Morumbis</th>
+<th data-quarto-table-cell-role="th">Mineirão</th>
+<th data-quarto-table-cell-role="th">Arena Grêmio</th>
+<th data-quarto-table-cell-role="th">Castelão</th>
+<th data-quarto-table-cell-role="th">Beira-Rio</th>
+<th data-quarto-table-cell-role="th">Neo-Quimica Arena</th>
+<th data-quarto-table-cell-role="th">Arena Fonte Nova</th>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">estadio</th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Maracanã</td>
+<td>0.000000</td>
+<td>3.556187</td>
+<td>3.134836</td>
+<td>10.690201</td>
+<td>19.654030</td>
+<td>10.735988</td>
+<td>3.305182</td>
+<td>10.999980</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Morumbis</td>
+<td>3.556187</td>
+<td>0.000000</td>
+<td>4.636190</td>
+<td>7.838247</td>
+<td>21.399147</td>
+<td>7.886667</td>
+<td>0.251098</td>
+<td>13.427281</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Mineirão</td>
+<td>3.134836</td>
+<td>4.636190</td>
+<td>0.000000</td>
+<td>12.473608</td>
+<td>16.934823</td>
+<td>12.521974</td>
+<td>4.449725</td>
+<td>8.793114</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Arena Grêmio</td>
+<td>10.690201</td>
+<td>7.838247</td>
+<td>12.473608</td>
+<td>0.000000</td>
+<td>29.100871</td>
+<td>0.048765</td>
+<td>8.025562</td>
+<td>21.259881</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Castelão</td>
+<td>19.654030</td>
+<td>21.399147</td>
+<td>16.934823</td>
+<td>29.100871</td>
+<td>0.000000</td>
+<td>29.149596</td>
+<td>21.255662</td>
+<td>9.153067</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Beira-Rio</td>
+<td>10.735988</td>
+<td>7.886667</td>
+<td>12.521974</td>
+<td>0.048765</td>
+<td>29.149596</td>
+<td>0.000000</td>
+<td>8.073849</td>
+<td>21.308102</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Neo-Quimica Arena</td>
+<td>3.305182</td>
+<td>0.251098</td>
+<td>4.449725</td>
+<td>8.025562</td>
+<td>21.255662</td>
+<td>8.073849</td>
+<td>0.000000</td>
+<td>13.234850</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Arena Fonte Nova</td>
+<td>10.999980</td>
+<td>13.427281</td>
+<td>8.793114</td>
+<td>21.259881</td>
+<td>9.153067</td>
+<td>21.308102</td>
+<td>13.234850</td>
+<td>0.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>Nesse caso, criamos uma matrix 19 x 19 onde o elemento da linha i e da coluna j é a distância entre i e j. Nesse caso, haverá uma matriz 19 x 19 de variáveis de decisão binária, onde cada elemento da linha i e da coluna j representa a decisão de tomar o custo desta matriz.</p>
+<p>Definindo o modelo e otimizando:</p>
+<div id="cell-15" class="cell" data-execution_count="207">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gp.Model(<span class="st">"tsp_v1"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model.Params.LogToConsole <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(df_distancia)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A dita matrix 19x19</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> model.addVars(n, n, vtype<span class="op">=</span>GRB.BINARY, name<span class="op">=</span><span class="st">"x"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Definindo a função objetivo, no caso multiplicando as variáveis de decisão pelas distâncias do nosso dataset</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>model.setObjective(gp.quicksum(df_distancia.iloc[i,j] <span class="op">*</span> x[i, j] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n)), gp.GRB.MINIMIZE)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Definindo restrições:</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Garante que o caixeiro vai se movimentar de um ponto para outro</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    model.addConstr(gp.quicksum(x[i, j] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n)) <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Garante que partindo de um ponto, o caxeiro só chegará em outro ponto</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n):     </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    model.addConstr(gp.quicksum(x[i, j] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n)) <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Garante que não ficará no mesmo lugar (o custo é zero, o que é bem tentador)</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):     </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    model.addConstr(x[i, i] <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Otimiza!</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>model.optimize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Nesse caso, as variáveis de decisão foram:</p>
+<div id="cell-17" class="cell" data-execution_count="208">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>iloc[i, <span class="dv">0</span>]<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>df<span class="sc">.</span>iloc[j, <span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Maracanã -&gt; Nilton Santos
+Morumbis -&gt; Allianz Arena
+Mineirão -&gt; Arena MRV
+Arena Grêmio -&gt; Alfredo Jaconi
+Castelão -&gt; Arena Fonte Nova
+Beira-Rio -&gt; Arena Grêmio
+Neo-Quimica Arena -&gt; Arena Red bull
+Arena Fonte Nova -&gt; Barradão
+Nilton Santos -&gt; São Januário
+Arena MRV -&gt; Mineirão
+Allianz Arena -&gt; Morumbis
+Arena Pantanal -&gt; Antonio Accioly
+Ligga Arena -&gt; Majestoso
+Barradão -&gt; Castelão
+São Januário -&gt; Maracanã
+Alfredo Jaconi -&gt; Beira-Rio
+Majestoso -&gt; Ligga Arena
+Arena Red bull -&gt; Neo-Quimica Arena
+Antonio Accioly -&gt; Arena Pantanal</code></pre>
+</div>
+</div>
+<p>Plotando a rota:</p>
+<div id="cell-19" class="cell" data-execution_count="209">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(df.longitude, df.latitude)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>arrowprops <span class="op">=</span> <span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, connectionstyle<span class="op">=</span><span class="st">'arc3'</span>, edgecolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota:</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    plt.annotate(<span class="st">""</span>, xy<span class="op">=</span>[ df.iloc[j][<span class="st">'longitude'</span>], df.iloc[j][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                      xytext<span class="op">=</span>[ df.iloc[i][<span class="st">'longitude'</span>], df.iloc[i][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                     arrowprops<span class="op">=</span>arrowprops)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Os 19 Estádios da Série A: Solução 1"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-8-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Faz sentido?</p>
+<p>Matemáticamente, sim. De fato, o modelo definiu rotas de forma que todos os estádios tiveram somente um destino e vieram somente de uma origem. Foi basicamente isso que exigimos dele. Ele basicamente sugeriu: faça vários tours diferentes em cada estado e, caso não seja possível (isso é, tenha somente um estádio no estado), vá para o estádio solitário mais próximo.</p>
+<p>Foi o que ele fez sugerindo Ligga Arena -&gt; Majestoso, Castelão -&gt; Arena Fonte Nova e Arena Pantanal -&gt; Antonio Accioly.</p>
+<p>Isso acontece porque não exigimos do modelo que todas as rotas estejam conectadas, apenas que ele passe por cada estádio e não deixe nenhum estádio isolado. Entendido isso, já posso dizer que você está apresentado ao dito Problema das Subrotas no Problema do Caixeiro Viajante.</p>
+<p>Esse problema basicamente faz que a solução via programação linear possa gerar, ao inves de rotas 100% conectadas, grupos de rotas, que atende as restrições iniciais, mas não resolva o problema. A partir de agora discutiremos como resolver esse problema.</p>
+</section>
+<section id="contornando-o-problema-das-subrotas-com-o-método-dfj" class="level3">
+<h3 class="anchored" data-anchor-id="contornando-o-problema-das-subrotas-com-o-método-dfj">Contornando o Problema das Subrotas com o Método DFJ</h3>
+<p>Há algumas formas de resolver o problema das subrotas. O Método DFJ é uma delas. Nele, treinamos um modelo padrão, como o feito, e adicionamos iterativamente restrições que impeçam as subrotas presentes na solução de acontecerem na nova iteração.</p>
+<p>É como se déssemos total liberdade para o modelo fazer o que ele quiser e, caso ele faça algo que não está nos nossos planos, criamos uma regra para evitar esse comportamento e damos uma nova chance para ele. Fazemos isso até não haver mais subrotas.</p>
+<p>Esse é um método interssantíssimo, pois não cria restrições desnecessárias de subrotas. Isso é, uma alternativa para ele seria criar restrições para todas as subrotas do modelo desde o início, mas esse número cresce de forma exponencial conforme n cresce (<span class="math inline">\(2^n\)</span>). Para o nosso problema, deveríamos criar <span class="math inline">\(524.288\)</span> restrições, o que poderia tornar inviável a resolução. Veremos a seguir que esse método cria um número bem menor de restrições para encontrar a solução ótima.</p>
+<p>Então, por exemplo, o modelo definiu uma subrota:</p>
+<p>Ligga Arena -&gt; Majestoso Majestoso -&gt; Ligga Arena</p>
+<p>Então adiciona-se uma restrição do tipo:</p>
+<p><span class="math inline">\(x_{12,\!16}+x_{\!16, 12} &lt;= 1\)</span></p>
+<p><i>(Lembrando que a Ligga Arena tem índice 12 e o Majestoso Índice 16 no nosso texto)</i></p>
+<div id="cell-23" class="cell" data-execution_count="210">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adiciona restrião que impede subrota entre Ligga Arena e Majestoso (basicamente obriga os dois a se socializarem)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model.addConstr(x[<span class="dv">12</span>, <span class="dv">16</span>]<span class="op">+</span>x[<span class="dv">16</span>, <span class="dv">12</span>] <span class="op">&lt;=</span> <span class="dv">1</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Otimiza!</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>model.optimize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Observando as novas rotas:</p>
+<div id="cell-25" class="cell" data-execution_count="211">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>iloc[i, <span class="dv">0</span>]<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>df<span class="sc">.</span>iloc[j, <span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Maracanã -&gt; Nilton Santos
+Morumbis -&gt; Allianz Arena
+Mineirão -&gt; Arena MRV
+Arena Grêmio -&gt; Beira-Rio
+Castelão -&gt; Barradão
+Beira-Rio -&gt; Arena Grêmio
+Neo-Quimica Arena -&gt; Arena Red bull
+Arena Fonte Nova -&gt; Castelão
+Nilton Santos -&gt; São Januário
+Arena MRV -&gt; Mineirão
+Allianz Arena -&gt; Morumbis
+Arena Pantanal -&gt; Antonio Accioly
+Ligga Arena -&gt; Majestoso
+Barradão -&gt; Arena Fonte Nova
+São Januário -&gt; Maracanã
+Alfredo Jaconi -&gt; Ligga Arena
+Majestoso -&gt; Alfredo Jaconi
+Arena Red bull -&gt; Neo-Quimica Arena
+Antonio Accioly -&gt; Arena Pantanal</code></pre>
+</div>
+</div>
+<p>Como podem notar, o Majestoso agora se conecta ao Alfredo Jaconi!!!</p>
+<p>Plotando as rotas:</p>
+<div id="cell-27" class="cell" data-execution_count="212">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(df.longitude, df.latitude)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>arrowprops <span class="op">=</span> <span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, connectionstyle<span class="op">=</span><span class="st">'arc3'</span>, edgecolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota:</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    plt.annotate(<span class="st">""</span>, xy<span class="op">=</span>[ df.iloc[j][<span class="st">'longitude'</span>], df.iloc[j][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>                      xytext<span class="op">=</span>[ df.iloc[i][<span class="st">'longitude'</span>], df.iloc[i][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>                     arrowprops<span class="op">=</span>arrowprops)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Os 19 Estádios da Série A: Solução 2"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nesse caso, ainda há subrotas. Apesar da restrição ter “quebrado” a subrota anterior, agora a Ligga Arena forma uma subrota com o Majestoso e o Alfredo Jaconi.</p>
+<p>Novamente adiciona-se uma restrição que impeça essa subrota de acontecer:</p>
+<p><span class="math inline">\(x_{12,\!16}+x_{\!16, 12} + x_{12,\!15}+x_{\!15, 12} + x_{16,\!15}+x_{\!15, 16} &lt;= 2\)</span></p>
+<p>Nesse caso, essa restrição garante que somente 2 desses caminhos serão tomados e, consequentemente, não será possível fechar um “triângulo” entre eles. Novamente, estamos exigindo que essa “subrota” se desmanche ou abranja mais estádios:</p>
+<div id="cell-29" class="cell" data-execution_count="213">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adiciona restrião que impede subrota entre Ligga Arena e Majestoso (basicamente obriga os dois a se socializarem)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model.addConstr(x[<span class="dv">12</span>, <span class="dv">16</span>]<span class="op">+</span>x[<span class="dv">16</span>, <span class="dv">12</span>]<span class="op">+</span>x[<span class="dv">12</span>, <span class="dv">15</span>]<span class="op">+</span>x[<span class="dv">15</span>, <span class="dv">12</span>]<span class="op">+</span>x[<span class="dv">16</span>, <span class="dv">15</span>]<span class="op">+</span>x[<span class="dv">15</span>, <span class="dv">16</span>] <span class="op">&lt;=</span> <span class="dv">2</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Otimiza!</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>model.optimize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vizualizando nossas novas rotas:</p>
+<div id="cell-31" class="cell" data-execution_count="214">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>iloc[i, <span class="dv">0</span>]<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>df<span class="sc">.</span>iloc[j, <span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Maracanã -&gt; Nilton Santos
+Morumbis -&gt; Allianz Arena
+Mineirão -&gt; Arena MRV
+Arena Grêmio -&gt; Beira-Rio
+Castelão -&gt; Arena Fonte Nova
+Beira-Rio -&gt; Arena Grêmio
+Neo-Quimica Arena -&gt; Arena Red bull
+Arena Fonte Nova -&gt; Barradão
+Nilton Santos -&gt; São Januário
+Arena MRV -&gt; Mineirão
+Allianz Arena -&gt; Ligga Arena
+Arena Pantanal -&gt; Antonio Accioly
+Ligga Arena -&gt; Morumbis
+Barradão -&gt; Castelão
+São Januário -&gt; Maracanã
+Alfredo Jaconi -&gt; Majestoso
+Majestoso -&gt; Alfredo Jaconi
+Arena Red bull -&gt; Neo-Quimica Arena
+Antonio Accioly -&gt; Arena Pantanal</code></pre>
+</div>
+</div>
+<div id="cell-32" class="cell" data-execution_count="215">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(df.longitude, df.latitude)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>arrowprops <span class="op">=</span> <span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, connectionstyle<span class="op">=</span><span class="st">'arc3'</span>, edgecolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota:</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    plt.annotate(<span class="st">""</span>, xy<span class="op">=</span>[ df.iloc[j][<span class="st">'longitude'</span>], df.iloc[j][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>               xytext<span class="op">=</span>[ df.iloc[i][<span class="st">'longitude'</span>], df.iloc[i][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                     arrowprops<span class="op">=</span>arrowprops)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Os 19 Estádios da Série A: Solução 3"</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nesse caso, a Ligga Arena se conectou ao Morumbi, legal, maaas… o Majestoso e Alfredo Jaconi fizeram uma nova subrota entre eles… A solução para isso é, sim, novamente adicionar novas restrições. Mas calma que eu não vou te alugar por mais tanto tempo.</p>
+<p>A idéia do Método é, basicamente, a cada iteração ir adicionando restrições. No nosso caso atacamos somente uma subrota, a que prendia os estádios do Paraná e Santa Catarina. Mas pode-se escalar isso e, sempre que rodar o modelo, definir uma função que encontra onde estão as subrotas para definir as novas restrições e, por fim, rodar o modelo novamente.</p>
+<p>O processo basicamente é:</p>
+<p>1 - Definir onde estão as subrotas <br> 2 - Criar uma restrição de forma que a soma das variáveis <span class="math inline">\(x_ij\)</span>, que serão combinações duas a duas dos n estádios dentro da subrota, seja menor ou igual que n - 1 <br> 3 - Rodar o modelo novamente <br></p>
+<p>Até que não haja mais subrotas.</p>
+<p>Definindo uma função que encontre subrotas:</p>
+<div id="cell-34" class="cell" data-execution_count="216">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encontra_subtours(rota):</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    pontos <span class="op">=</span> []</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,j <span class="kw">in</span> rota:</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> i <span class="kw">not</span> <span class="kw">in</span> pontos:</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>              pontos.append(i)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>         <span class="cf">if</span> j <span class="kw">not</span> <span class="kw">in</span> pontos:</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>              pontos.append(j)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> <span class="bu">len</span>(pontos)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    visitados <span class="op">=</span> [<span class="va">False</span>] <span class="op">*</span> n </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    subtours <span class="op">=</span> [] </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> inicio <span class="kw">in</span> <span class="bu">range</span>(n): </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> visitados[inicio]: </span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            tour_atual <span class="op">=</span> [] </span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>            i <span class="op">=</span> inicio </span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">while</span> <span class="kw">not</span> visitados[i]: </span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>                visitados[i] <span class="op">=</span> <span class="va">True</span> </span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>                tour_atual.append(i) </span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>                proximo_ponto <span class="op">=</span> <span class="va">None</span> </span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n): </span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">if</span> (i, j) <span class="kw">in</span> rota <span class="kw">and</span> <span class="kw">not</span> visitados[j]: </span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>                            proximo_ponto <span class="op">=</span> j </span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>                            <span class="cf">break</span> </span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> proximo_ponto <span class="kw">is</span> <span class="va">None</span>: </span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">break</span> </span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>                i <span class="op">=</span> proximo_ponto </span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>            subtours.append(tour_atual) </span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> subtours</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Loop onde fazemos inúmeras iterações até não termos mais subrotas:</p>
+<div id="cell-36" class="cell" data-execution_count="217">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criação do modelo </span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gp.Model(<span class="st">"TSP_Iterativo"</span>) </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>model.Params.LogToConsole <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Criação das variáveis de decisão </span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> model.addVars(n, n, vtype<span class="op">=</span>GRB.BINARY, name<span class="op">=</span><span class="st">"x"</span>) </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Função objetivo </span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>model.setObjective(gp.quicksum(df_distancia.iloc[i,j] <span class="op">*</span> x[i, j] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n)), GRB.MINIMIZE) </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Garante que o caixeiro vai se movimentar de um ponto para outro</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    model.addConstr(gp.quicksum(x[i, j] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n)) <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Garante que partindo de um ponto, o caxeiro só chegará em outro ponto</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n):     </span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    model.addConstr(gp.quicksum(x[i, j] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n)) <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Garante que não ficará no mesmo lugar (o custo é zero, o que é bem tentador)</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n):     </span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    model.addConstr(x[i, i] <span class="op">==</span> <span class="dv">0</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Iteração para resolver o problema e cortar subrotas </span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>conjunto_rotas <span class="op">=</span> []</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>iteracao <span class="op">=</span> <span class="dv">0</span> </span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>restricoes <span class="op">=</span> []</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="va">True</span>: </span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    iteracao <span class="op">+=</span> <span class="dv">1</span> </span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Resolver o modelo </span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>    model.optimize() </span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    restricoes.append(<span class="bu">len</span>(model.getConstrs()))</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Verificar se o modelo foi resolvido de forma ótima </span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> model.status <span class="op">!=</span> GRB.OPTIMAL: </span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>         <span class="bu">print</span>(<span class="st">"Não foi possível encontrar uma solução ótima."</span>) </span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>         <span class="cf">break</span> </span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>    rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    conjunto_rotas.append(rota)</span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Encontrar subrotas na solução </span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    subtours <span class="op">=</span> encontra_subtours(rota) </span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Se não há subrotas, terminar o processo </span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(subtours) <span class="op">==</span> <span class="dv">1</span>: </span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span> </span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Adicionar restrições para eliminar as subrotas encontradas </span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> subtour <span class="kw">in</span> subtours: </span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(subtour) <span class="op">&lt;</span> n: </span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a>            model.addConstr(gp.quicksum(x[i, j] <span class="cf">for</span> i <span class="kw">in</span> subtour <span class="cf">for</span> j <span class="kw">in</span> subtour <span class="cf">if</span> i <span class="op">!=</span> j) <span class="op">&lt;=</span> <span class="bu">len</span>(subtour) <span class="op">-</span> <span class="dv">1</span>) </span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>            </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vizualizando a rota definida pelo modelo:</p>
+<div id="cell-38" class="cell" data-execution_count="223">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(df.longitude, df.latitude)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>arrowprops <span class="op">=</span> <span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, connectionstyle<span class="op">=</span><span class="st">'arc3'</span>, edgecolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota:</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    plt.annotate(<span class="st">""</span>, xy<span class="op">=</span>[ df.iloc[j][<span class="st">'longitude'</span>], df.iloc[j][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                      xytext<span class="op">=</span>[ df.iloc[i][<span class="st">'longitude'</span>], df.iloc[i][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>                     arrowprops<span class="op">=</span>arrowprops)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Os 19 Estádios da Série A: Solução Definitiva"</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-17-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Enfim, uma rota que reduz a distância percorrida, mas garante que todos os estados estarão conectados. Problema resolvido!</p>
+<p>Vizualizando a evolução das rotas:</p>
+<div id="cell-40" class="cell" data-execution_count="227">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_ax(ax, n, df):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    ax.set_axis_off()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    ax.scatter(df.longitude, df.latitude)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    arrowprops <span class="op">=</span> <span class="bu">dict</span>(arrowstyle<span class="op">=</span><span class="st">'-&gt;'</span>, connectionstyle<span class="op">=</span><span class="st">'arc3'</span>, edgecolor<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, j <span class="kw">in</span> conjunto_rotas[n]:</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        ax.annotate(<span class="st">""</span>, xy<span class="op">=</span>[df.iloc[j][<span class="st">'longitude'</span>], df.iloc[j][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                         xytext<span class="op">=</span>[ df.iloc[i][<span class="st">'longitude'</span>], df.iloc[i][<span class="st">'latitude'</span>]],<span class="op">\</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                         arrowprops<span class="op">=</span>arrowprops)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    ax.set_title(<span class="ss">f"Iteração </span><span class="sc">{</span>n<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>f, axs <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">5</span>), nrows<span class="op">=</span><span class="dv">2</span>, ncols<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> axs.ravel()</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    plot_ax(axs[n], n, df)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="op">-</span><span class="dv">1</span>].remove()</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Problema do Caixeiro Viajante com o Método DFJ"</span>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-18-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Analisando o número de restrições adicionadas e o número de subrotas:</p>
+<div id="cell-42" class="cell" data-execution_count="225">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>f, axs <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>), nrows<span class="op">=</span><span class="dv">2</span>, sharex<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">6</span>), restricoes)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_ylim(<span class="dv">0</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].set_title(<span class="st">"Número de Restrições"</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">6</span>), [<span class="bu">len</span>(encontra_subtours(rota)) <span class="cf">for</span> rota <span class="kw">in</span> conjunto_rotas])</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_ylim(<span class="dv">0</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_title(<span class="st">"Número de Subrotas"</span>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xticks(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">6</span>))</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].set_xlabel(<span class="st">"Iteração"</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">1</span>].axhline(y<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">.2</span>)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="jupyter_notebook_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nesse caso é interessante como foi definida somente 81 restrições para a resolução do problema, com pouco mais de 20 restrições para evitar as subrotas deste conjunto de dados, o que é bem abaixo das centenas de milhares de restrições necessárias para todas as possíveis subrotas. Isso acontece porque é praticamente impossível, por exemplo, o Beira Rio (no Rio Grande do Sul) formar uma subrota com o Castelão (no Ceará). Nesse caso, então, ao inves do nosso algoritmo se preocupar com as centenas de milhares de subrotas improváveis, ele foca em evitar as subrotas factíveis, por exemplo:</p>
+<p>É provável que estádios do mesmo estado formem uma subrota (iteração 1). O modelo adiciona restrições para isso. Depois, é provável que, não podendo ficar restrito ao próprio estado, estádios de mesma região formem subrotas (iteração 4). O modelo adiciona restrições para isso. Dessa forma, o modelo vai obrigando as subrotas a se integrarem, de forma que em 5 iterações (para esse conjunto de pontos), chegue a uma solução ótima e integrada.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
