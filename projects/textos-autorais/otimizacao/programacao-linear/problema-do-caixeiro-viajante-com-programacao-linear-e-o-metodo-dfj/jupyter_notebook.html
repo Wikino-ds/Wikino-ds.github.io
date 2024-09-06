@@ -111,7 +111,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">O Problema do Caixeiro Viajante com o Programação Linear e o Método DFJ</h1>
+<h1 class="title">O Problema do Caixeiro Viajante com Programação Linear</h1>
 </div>
 
 
@@ -140,13 +140,13 @@ Data: 01/09/2024
 </section>
 <section id="o-problema-do-caixeiro-viajante" class="level2">
 <h2 class="anchored" data-anchor-id="o-problema-do-caixeiro-viajante">O Problema do Caixeiro Viajante</h2>
-<p>O problema do caixeiro viajante (ou Traveling Salesman) é o problema onde temos um indíviduo que deseja visitar <span class="math inline">\(n\)</span> cidades de forma que visite cada cidade somente uma vez e volte na sua origem percorrendo a menor distância possível. É um problema clássico da otimização devido à sua velocidade de aumento de complexidade computacional. Quando temos somente <span class="math inline">\(4\)</span> cidades, por exemplo, há somente <span class="math inline">\(3\)</span> possibilidades de rotas. Todavia, esse espaço de possibildades cresce de forma exponencial conforme <span class="math inline">\(n\)</span> cresce. Sendo <span class="math inline">\(S\)</span> o espaço de busca da melhor rota, então o tamanho de <span class="math inline">\(S\)</span> é dado por: <span class="math display">\[C_{n, 2} = \frac{(n-1)!}{2}\]</span></p>
+<p>O problema do caixeiro viajante (ou Traveling Salesman) é o problema onde temos um indíviduo que deseja visitar <span class="math inline">\(n\)</span> cidades de forma que visite cada cidade somente uma vez e volte à sua origem percorrendo a menor distância possível. É um problema clássico da otimização devido à sua velocidade de aumento de complexidade computacional. Quando temos somente <span class="math inline">\(4\)</span> cidades, por exemplo, há somente <span class="math inline">\(3\)</span> possibilidades de rotas. Todavia, esse espaço de possibildades cresce de forma exponencial conforme <span class="math inline">\(n\)</span> cresce. Sendo <span class="math inline">\(S\)</span> o espaço de busca da melhor rota, então o tamanho de <span class="math inline">\(S\)</span> é dado por: <span class="math display">\[C_{n, 2} = \frac{(n-1)!}{2}\]</span></p>
 <p>No caso, usando os 19 estádios da Série A do Brasileirão 2024, temos 3.201.186.852.864.000 (três quadrilhões, duzentos e um trilhões, cento e oitenta e seis bilhões, oitocentos e cinquenta e 2 milhões, oitocentos e secenta e quatro mil) possibilidades de rota. Nesse caso, você já pode imaginar que, por mais trivial que seja o cálculo da distância total dessa rota, é impossível testar todas as possibilidades, o que nos exige uma forma robusta de encontrar a solução ótima.</p>
-<p>Apesar de parecer um problema abstrato, não faltam aplicações desse problema na “vida real”. Por exemplo, no contexto de logística, um caminhão que saí de um hub para abastecer uma rede de suprimento vai passar por todos os pontos e, por fim, voltar para o seu hub. Nesse caso, a definição da sua rota pode ser encarada como um Problema do Caixeiro Viajante.</p>
+<p>Apesar de parecer um problema abstrato, não faltam aplicações desse problema na “vida real”. Por exemplo, no contexto de logística, um entregador que saí de um hub para realizar entregas vai passar por todos os pontos e, por fim, voltar para o seu hub. Nesse caso, a definição da sua rota pode ser encarada como um Problema do Caixeiro Viajante.</p>
 </section>
-<section id="a-abordagem-da-programação-linear" class="level2">
-<h2 class="anchored" data-anchor-id="a-abordagem-da-programação-linear">A Abordagem da Programação Linear</h2>
-<p>O último parágrafo pode ter te assutado, afinal, todas as vezes que um entregador da Amazon saí com 20 pacotes para entregar, ele tem que pensar em qual das dezenas de quadrilhões de rotas ele deve seguir durante o seu dia. Mas calma, há formas de se resolver esse problema. No caso, o approach a ser implementado será o da Programação Linear (PL). Não é minha intenção ensinar como “pensa” a abordagem da programação linear, porque isso tornaria o texto excessivamente extenso. Todavia, o que você precisa entender é que em um problema de Programação Linear temos variáveis de decisão, que é o que queremos otimizar, uma função objetivo linear e restrições lineares.</p>
+<section id="programação-linear" class="level2">
+<h2 class="anchored" data-anchor-id="programação-linear">Programação Linear</h2>
+<p>O último parágrafo pode ter te assutado, afinal, todas as vezes que um entregador da Amazon saí com 20 pacotes para realizar entregas, ele tem que pensar em qual das dezenas de quadrilhões de rotas ele deve seguir durante o seu dia. Mas calma, há formas de se resolver esse problema. No caso, o approach a ser implementado será o da Programação Linear (PL). Não é minha intenção ensinar como “pensa” a abordagem da programação linear, porque isso tornaria o texto excessivamente extenso. Todavia, o que você precisa entender é que em um problema de Programação Linear temos variáveis de decisão, que é o que queremos otimizar, uma função objetivo linear, que é o que queremos minimizar, e restrições lineares.</p>
 </section>
 <section id="resolvendo-o-problema-do-caixeiro-viajante-para-os-estádios-da-série-a-do-brasileirão-2024" class="level2">
 <h2 class="anchored" data-anchor-id="resolvendo-o-problema-do-caixeiro-viajante-para-os-estádios-da-série-a-do-brasileirão-2024">Resolvendo O Problema do Caixeiro Viajante para os Estádios da Série A do Brasileirão 2024</h2>
@@ -156,15 +156,15 @@ Data: 01/09/2024
 <p><b><span class="math inline">\(x_{ij}\)</span> -&gt; Se, ao estar no estádio <span class="math inline">\(i\)</span>, o caixeiro seguirá para o estádio <span class="math inline">\(j\)</span> </b><br></p>
 <p>Outra variável importante é o custo <span class="math inline">\(c_{ij}\)</span> de ir do estádio i para o estádio j (algo como: afinal, qual o custo de tomar a decisão de ir do Morumbi para o Maracanã?):</p>
 <p><b><span class="math inline">\(c_{ij}\)</span> -&gt; Custo de, ao estar no estádio <span class="math inline">\(i\)</span>, seguir para o estádio <span class="math inline">\(j\)</span> </b><br></p>
-<p>Repare na palavra custo. Ela não está aí a toa. No nosso caso, o custo vai ser a distância. Mais precisamente a distância euclidiana das latitudes e longitudes dos estádios. Poderia ser o tempo, por exemplo. Poderia ser um custo financeiro ou ambiental (emissão de carbono). <br></p>
+<p>Repare na palavra custo. Ela não está aí a toa. No nosso caso, o custo vai ser a distância. Mais precisamente a distância euclidiana das latitudes e longitudes dos estádios. Poderia ser o tempo, por exemplo. Poderia ser um custo financeiro ou ambiental (emissão de carbono, por exemplo). <br></p>
 <p>Definida, então, essas variáveis, já podemos partir para a função objetivo, que é quem minimizaremos:</p>
 <p><span class="math display">\[\text{Minimizar} \quad Z = \sum_{i=1}^{n} \sum_{j=1}^{n} c_{ij} \cdot x_{ij}\]</span></p>
 <p>Não se assuste. Nossa função objetivo basicamente diz que custo total (que desejamos minimizar) será algo como:</p>
 <p>(custo de ir do Morumbi para o Maracanã) * (decisão de ir do Morumbi para o Maracanã) + (custo de ir do Morumbi para o Mineirão) * (decisão de ir do Morumbi para o Maracanã) + … + (custo de ir do Maracanã para o Morumbi) * (decisão de ir do Maracanã para o Mineirão) + …</p>
-<p>A maior parte dessas variáveis de decisões vão ter valor 0, afinal, nossa rota tem 19 estádios.</p>
-<p>Além disso, devemos adicionar algumas regras para o modelo não encontrar uma solução que não faz sentido para o nosso problema, por exemplo: o caixeiro não pode ficar no mesmo lugar. Então:</p>
+<p>A maior parte dessas variáveis vão ter valor 0, afinal, nossa rota tem 19 estádios e consequentemente um número limitado de decisões.</p>
+<p>Além disso, devemos adicionar algumas regras para o modelo não encontrar uma solução que não faz sentido para o nosso problema, por exemplo: o caixeiro não pode ficar no mesmo lugar (o modelo “não sabe” que a variável <span class="math inline">\(x_{11}\)</span> leva o caixeiro de 1 pra 1). Então:</p>
 <p><span class="math inline">\(x_{ii} = 0\)</span>, para i = 1, 2, 3, … n</p>
-<p>Além disso, ele tem que visitar todos os pontos:</p>
+<p>Além disso, ele tem que visitar todos os pontos e vindo somente de uma origem:</p>
 <p><span class="math inline">\(\sum_{i=1}^{n} x_{ij} = 1\)</span>, para j = 1, 2, 3, … n</p>
 <p>Isso é algo como: Eu tenho que ir para o Morumbi, seja pelo Maracanã, seja pelo Mineirão, seja pelo Castelão…</p>
 <p><span class="math inline">\(\sum_{j=1}^{n} x_{ij} = 1\)</span> , para i = 1, 2, 3, … n</p>
@@ -178,7 +178,7 @@ Data: 01/09/2024
 <section id="implementando-com-python-e-gurobi" class="level3">
 <h3 class="anchored" data-anchor-id="implementando-com-python-e-gurobi">Implementando com Python e Gurobi</h3>
 <p>Pacotes a serem usados:</p>
-<div id="cell-7" class="cell" data-execution_count="203">
+<div id="cell-7" class="cell" data-execution_count="60">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manipular dados</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
@@ -194,12 +194,12 @@ Data: 01/09/2024
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">"ggplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Importando dados e plotando vizualização dos pontos:</p>
-<div id="cell-9" class="cell" data-execution_count="204">
+<div id="cell-9" class="cell" data-execution_count="61">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>geo_plot <span class="op">=</span> gpd.read_file(<span class="st">"bcim_2016_21_11_2018.gpkg"</span>, layer<span class="op">=</span><span class="st">"lim_unidade_federacao_a"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"estadios_data.csv"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="204">
+<div class="cell-output cell-output-display" data-execution_count="61">
 <div>
 
 
@@ -255,7 +255,7 @@ Data: 01/09/2024
 </div>
 </div>
 </div>
-<div id="cell-10" class="cell" data-execution_count="205">
+<div id="cell-10" class="cell" data-execution_count="62">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
@@ -273,13 +273,13 @@ Data: 01/09/2024
 </div>
 </div>
 <p>Calculando distancias (a variável <span class="math inline">\(c_{ij}\)</span>):</p>
-<div id="cell-12" class="cell" data-execution_count="206">
+<div id="cell-12" class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_distancia <span class="op">=</span> pd.DataFrame(distance_matrix(df[[<span class="st">"latitude"</span>, <span class="st">"longitude"</span>]].values,</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                                            df[[<span class="st">"latitude"</span>, <span class="st">"longitude"</span>]].values),</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                            index<span class="op">=</span>df.estadio,columns<span class="op">=</span>df.estadio)</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_distancia.iloc[:<span class="dv">8</span>, :<span class="dv">8</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="206">
+<div class="cell-output cell-output-display" data-execution_count="63">
 <div>
 
 
@@ -403,9 +403,9 @@ Data: 01/09/2024
 </div>
 </div>
 </div>
-<p>Nesse caso, criamos uma matrix 19 x 19 onde o elemento da linha i e da coluna j é a distância entre i e j. Nesse caso, haverá uma matriz 19 x 19 de variáveis de decisão binária, onde cada elemento da linha i e da coluna j representa a decisão de tomar o custo desta matriz.</p>
+<p>Nesse caso, criamos uma matrix 19 x 19 onde o elemento da linha i e da coluna j é a distância entre i e j. Haverá também uma matriz 19 x 19 de variáveis de decisão binária, onde cada elemento da linha i e da coluna j representa a decisão de tomar o custo desta matriz.</p>
 <p>Definindo o modelo e otimizando:</p>
-<div id="cell-15" class="cell" data-execution_count="207">
+<div id="cell-15" class="cell" data-execution_count="64">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gp.Model(<span class="st">"tsp_v1"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>model.Params.LogToConsole <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -434,7 +434,7 @@ Data: 01/09/2024
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>model.optimize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Nesse caso, as variáveis de decisão foram:</p>
-<div id="cell-17" class="cell" data-execution_count="208">
+<div id="cell-17" class="cell" data-execution_count="65">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
@@ -462,7 +462,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 </div>
 <p>Plotando a rota:</p>
-<div id="cell-19" class="cell" data-execution_count="209">
+<div id="cell-19" class="cell" data-execution_count="66">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
@@ -489,19 +489,19 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 <p>Matemáticamente, sim. De fato, o modelo definiu rotas de forma que todos os estádios tiveram somente um destino e vieram somente de uma origem. Foi basicamente isso que exigimos dele. Ele basicamente sugeriu: faça vários tours diferentes em cada estado e, caso não seja possível (isso é, tenha somente um estádio no estado), vá para o estádio solitário mais próximo.</p>
 <p>Foi o que ele fez sugerindo Ligga Arena -&gt; Majestoso, Castelão -&gt; Arena Fonte Nova e Arena Pantanal -&gt; Antonio Accioly.</p>
 <p>Isso acontece porque não exigimos do modelo que todas as rotas estejam conectadas, apenas que ele passe por cada estádio e não deixe nenhum estádio isolado. Entendido isso, já posso dizer que você está apresentado ao dito Problema das Subrotas no Problema do Caixeiro Viajante.</p>
-<p>Esse problema basicamente faz que a solução via programação linear possa gerar, ao inves de rotas 100% conectadas, grupos de rotas, que atende as restrições iniciais, mas não resolva o problema. A partir de agora discutiremos como resolver esse problema.</p>
+<p>Esse problema basicamente faz que a solução via programação linear possa gerar, ao inves de rotas 100% conectadas, grupos de subrotas, que atende as restrições iniciais, mas não resolva o problema. A partir de agora discutiremos como resolver esse problema.</p>
 </section>
 <section id="contornando-o-problema-das-subrotas-com-o-método-dfj" class="level3">
 <h3 class="anchored" data-anchor-id="contornando-o-problema-das-subrotas-com-o-método-dfj">Contornando o Problema das Subrotas com o Método DFJ</h3>
 <p>Há algumas formas de resolver o problema das subrotas. O Método DFJ é uma delas. Nele, treinamos um modelo padrão, como o feito, e adicionamos iterativamente restrições que impeçam as subrotas presentes na solução de acontecerem na nova iteração.</p>
-<p>É como se déssemos total liberdade para o modelo fazer o que ele quiser e, caso ele faça algo que não está nos nossos planos, criamos uma regra para evitar esse comportamento e damos uma nova chance para ele. Fazemos isso até não haver mais subrotas.</p>
-<p>Esse é um método interssantíssimo, pois não cria restrições desnecessárias de subrotas. Isso é, uma alternativa para ele seria criar restrições para todas as subrotas do modelo desde o início, mas esse número cresce de forma exponencial conforme n cresce (<span class="math inline">\(2^n\)</span>). Para o nosso problema, deveríamos criar <span class="math inline">\(524.288\)</span> restrições, o que poderia tornar inviável a resolução. Veremos a seguir que esse método cria um número bem menor de restrições para encontrar a solução ótima.</p>
+<p>É como se déssemos total liberdade para o modelo fazer o que ele quiser e, caso ele faça algo que não está nos nossos planos, criamos uma regra para evitar esse comportamento e retreinamos ele. Fazemos isso até não haver mais subrotas.</p>
+<p>Esse é um método interssantíssimo, pois não cria restrições desnecessárias de subrotas. Uma alternativa para ele seria criar restrições para todas as subrotas do modelo desde o início, mas esse número cresce de forma exponencial conforme n cresce (<span class="math inline">\(2^n\)</span>). Para o nosso problema, deveríamos criar <span class="math inline">\(524.288\)</span> restrições, o que poderia tornar inviável a resolução. Veremos a seguir que esse método cria um número bem menor de restrições para encontrar a solução ótima.</p>
 <p>Então, por exemplo, o modelo definiu uma subrota:</p>
-<p>Ligga Arena -&gt; Majestoso Majestoso -&gt; Ligga Arena</p>
+<p>Ligga Arena -&gt; Majestoso <br> Majestoso -&gt; Ligga Arena</p>
 <p>Então adiciona-se uma restrição do tipo:</p>
 <p><span class="math inline">\(x_{12,\!16}+x_{\!16, 12} &lt;= 1\)</span></p>
 <p><i>(Lembrando que a Ligga Arena tem índice 12 e o Majestoso Índice 16 no nosso texto)</i></p>
-<div id="cell-23" class="cell" data-execution_count="210">
+<div id="cell-23" class="cell" data-execution_count="67">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adiciona restrião que impede subrota entre Ligga Arena e Majestoso (basicamente obriga os dois a se socializarem)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model.addConstr(x[<span class="dv">12</span>, <span class="dv">16</span>]<span class="op">+</span>x[<span class="dv">16</span>, <span class="dv">12</span>] <span class="op">&lt;=</span> <span class="dv">1</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -509,7 +509,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>model.optimize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Observando as novas rotas:</p>
-<div id="cell-25" class="cell" data-execution_count="211">
+<div id="cell-25" class="cell" data-execution_count="68">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
@@ -538,7 +538,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 <p>Como podem notar, o Majestoso agora se conecta ao Alfredo Jaconi!!!</p>
 <p>Plotando as rotas:</p>
-<div id="cell-27" class="cell" data-execution_count="212">
+<div id="cell-27" class="cell" data-execution_count="69">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
@@ -561,11 +561,11 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 </div>
 </div>
-<p>Nesse caso, ainda há subrotas. Apesar da restrição ter “quebrado” a subrota anterior, agora a Ligga Arena forma uma subrota com o Majestoso e o Alfredo Jaconi.</p>
+<p>Ainda há subrotas. Apesar da restrição ter “quebrado” a subrota anterior, agora a Ligga Arena forma uma subrota com o Majestoso e o Alfredo Jaconi.</p>
 <p>Novamente adiciona-se uma restrição que impeça essa subrota de acontecer:</p>
 <p><span class="math inline">\(x_{12,\!16}+x_{\!16, 12} + x_{12,\!15}+x_{\!15, 12} + x_{16,\!15}+x_{\!15, 16} &lt;= 2\)</span></p>
-<p>Nesse caso, essa restrição garante que somente 2 desses caminhos serão tomados e, consequentemente, não será possível fechar um “triângulo” entre eles. Novamente, estamos exigindo que essa “subrota” se desmanche ou abranja mais estádios:</p>
-<div id="cell-29" class="cell" data-execution_count="213">
+<p>Essa restrição garante que somente 2 desses caminhos serão tomados e, consequentemente, não será possível fechar um “triângulo” entre eles. Novamente, estamos exigindo que essa “subrota” se desmanche ou abranja mais estádios:</p>
+<div id="cell-29" class="cell" data-execution_count="70">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adiciona restrião que impede subrota entre Ligga Arena e Majestoso (basicamente obriga os dois a se socializarem)</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model.addConstr(x[<span class="dv">12</span>, <span class="dv">16</span>]<span class="op">+</span>x[<span class="dv">16</span>, <span class="dv">12</span>]<span class="op">+</span>x[<span class="dv">12</span>, <span class="dv">15</span>]<span class="op">+</span>x[<span class="dv">15</span>, <span class="dv">12</span>]<span class="op">+</span>x[<span class="dv">16</span>, <span class="dv">15</span>]<span class="op">+</span>x[<span class="dv">15</span>, <span class="dv">16</span>] <span class="op">&lt;=</span> <span class="dv">2</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -573,7 +573,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>model.optimize()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vizualizando nossas novas rotas:</p>
-<div id="cell-31" class="cell" data-execution_count="214">
+<div id="cell-31" class="cell" data-execution_count="71">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
@@ -600,7 +600,7 @@ Arena Red bull -&gt; Neo-Quimica Arena
 Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 </div>
-<div id="cell-32" class="cell" data-execution_count="215">
+<div id="cell-32" class="cell" data-execution_count="72">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
@@ -623,13 +623,13 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 </div>
 </div>
-<p>Nesse caso, a Ligga Arena se conectou ao Morumbi, legal, maaas… o Majestoso e Alfredo Jaconi fizeram uma nova subrota entre eles… A solução para isso é, sim, novamente adicionar novas restrições. Mas calma que eu não vou te alugar por mais tanto tempo.</p>
-<p>A idéia do Método é, basicamente, a cada iteração ir adicionando restrições. No nosso caso atacamos somente uma subrota, a que prendia os estádios do Paraná e Santa Catarina. Mas pode-se escalar isso e, sempre que rodar o modelo, definir uma função que encontra onde estão as subrotas para definir as novas restrições e, por fim, rodar o modelo novamente.</p>
+<p>Agora a Ligga Arena se conectou ao Morumbi, legal, maaas… o Majestoso e Alfredo Jaconi fizeram uma nova subrota entre eles… A solução para isso é, sim, novamente adicionar novas restrições. Mas calma que eu não vou te alugar por mais tanto tempo.</p>
+<p>A idéia do Método DFJ é, basicamente, a cada iteração ir adicionando restrições. No nosso caso atacamos somente uma subrota, a que prendia os estádios do Paraná e Santa Catarina. Mas pode-se escalar isso e, sempre que rodar o modelo, definir uma função que encontra onde estão as subrotas para definir as novas restrições e, por fim, rodar o modelo novamente.</p>
 <p>O processo basicamente é:</p>
 <p>1 - Definir onde estão as subrotas <br> 2 - Criar uma restrição de forma que a soma das variáveis <span class="math inline">\(x_ij\)</span>, que serão combinações duas a duas dos n estádios dentro da subrota, seja menor ou igual que n - 1 <br> 3 - Rodar o modelo novamente <br></p>
 <p>Até que não haja mais subrotas.</p>
 <p>Definindo uma função que encontre subrotas:</p>
-<div id="cell-34" class="cell" data-execution_count="216">
+<div id="cell-34" class="cell" data-execution_count="73">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encontra_subtours(rota):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    pontos <span class="op">=</span> []</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i,j <span class="kw">in</span> rota:</span>
@@ -662,8 +662,9 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 <span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>            subtours.append(tour_atual) </span>
 <span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> subtours</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><i>Script gentilmente cedido pelo Professor <a href="https://www.linkedin.com/in/gustavo-valentim-loch-47b93a196/" target="_blank" rel="noopener noreferrer">Gustavo Loch</a></i></p>
 <p>Loop onde fazemos inúmeras iterações até não termos mais subrotas:</p>
-<div id="cell-36" class="cell" data-execution_count="217">
+<div id="cell-37" class="cell" data-execution_count="74">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Criação do modelo </span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gp.Model(<span class="st">"TSP_Iterativo"</span>) </span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>model.Params.LogToConsole <span class="op">=</span> <span class="dv">0</span></span>
@@ -721,7 +722,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 <span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>            </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Vizualizando a rota definida pelo modelo:</p>
-<div id="cell-38" class="cell" data-execution_count="223">
+<div id="cell-39" class="cell" data-execution_count="75">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>f, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">5</span>))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>ax.set_axis_off()</span>
@@ -746,7 +747,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 <p>Enfim, uma rota que reduz a distância percorrida, mas garante que todos os estados estarão conectados. Problema resolvido!</p>
 <p>Vizualizando a evolução das rotas:</p>
-<div id="cell-40" class="cell" data-execution_count="227">
+<div id="cell-41" class="cell" data-execution_count="76">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_ax(ax, n, df):</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    ax.set_axis_off()</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    geo_plot.plot(ax<span class="op">=</span>ax, color<span class="op">=</span><span class="st">'white'</span>, edgecolor<span class="op">=</span><span class="st">'black'</span>)</span>
@@ -761,8 +762,8 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 <span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>f, axs <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">5</span>), nrows<span class="op">=</span><span class="dv">2</span>, ncols<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>axs <span class="op">=</span> axs.ravel()</span>
 <span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    plot_ax(axs[n], n, df)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> n_ite <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    plot_ax(axs[n_ite], n_ite, df)</span>
 <span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>axs[<span class="op">-</span><span class="dv">1</span>].remove()</span>
 <span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Problema do Caixeiro Viajante com o Método DFJ"</span>)</span>
@@ -776,7 +777,7 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 </div>
 <p>Analisando o número de restrições adicionadas e o número de subrotas:</p>
-<div id="cell-42" class="cell" data-execution_count="225">
+<div id="cell-43" class="cell" data-execution_count="77">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>f, axs <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">4</span>), nrows<span class="op">=</span><span class="dv">2</span>, sharex<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>axs[<span class="dv">0</span>].plot(<span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">6</span>), restricoes)</span>
@@ -799,8 +800,42 @@ Antonio Accioly -&gt; Arena Pantanal</code></pre>
 </div>
 </div>
 </div>
-<p>Nesse caso é interessante como foi definida somente 81 restrições para a resolução do problema, com pouco mais de 20 restrições para evitar as subrotas deste conjunto de dados, o que é bem abaixo das centenas de milhares de restrições necessárias para todas as possíveis subrotas. Isso acontece porque é praticamente impossível, por exemplo, o Beira Rio (no Rio Grande do Sul) formar uma subrota com o Castelão (no Ceará). Nesse caso, então, ao inves do nosso algoritmo se preocupar com as centenas de milhares de subrotas improváveis, ele foca em evitar as subrotas factíveis, por exemplo:</p>
+<p>É interessante como foi definida somente 81 restrições para a resolução do problema, com pouco mais de 20 restrições para evitar as subrotas deste conjunto de dados, o que é bem abaixo das centenas de milhares de restrições necessárias para todas as possíveis subrotas. Isso acontece porque é praticamente impossível, por exemplo, o Beira Rio (no Rio Grande do Sul) formar uma subrota com o Castelão (no Ceará). Nesse caso, então, ao inves do nosso algoritmo se preocupar com as centenas de milhares de subrotas improváveis, ele foca em evitar as subrotas factíveis, por exemplo:</p>
 <p>É provável que estádios do mesmo estado formem uma subrota (iteração 1). O modelo adiciona restrições para isso. Depois, é provável que, não podendo ficar restrito ao próprio estado, estádios de mesma região formem subrotas (iteração 4). O modelo adiciona restrições para isso. Dessa forma, o modelo vai obrigando as subrotas a se integrarem, de forma que em 5 iterações (para esse conjunto de pontos), chegue a uma solução ótima e integrada.</p>
+<p>Custos e rota final:</p>
+<div id="cell-45" class="cell" data-execution_count="82">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rota <span class="op">=</span> [(i, j) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(n) <span class="cf">if</span> x[i, j].x <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>custo <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, j <span class="kw">in</span> rota: </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    custo_caminho <span class="op">=</span> df_distancia.iloc[i, j]</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>df<span class="sc">.</span>iloc[i, <span class="dv">0</span>]<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>df<span class="sc">.</span>iloc[j, <span class="dv">0</span>]<span class="sc">}</span><span class="ss"> (Custo </span><span class="sc">{</span>custo_caminho<span class="sc">:.2f}</span><span class="ss">)"</span>)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    custo <span class="op">+=</span> custo_caminho</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Custo Final: </span><span class="sc">{</span>custo<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Maracanã -&gt; Nilton Santos (Custo 0.06)
+Morumbis -&gt; Ligga Arena (Custo 3.16)
+Mineirão -&gt; Arena MRV (Custo 0.08)
+Arena Grêmio -&gt; Alfredo Jaconi (Custo 0.86)
+Castelão -&gt; Barradão (Custo 9.09)
+Beira-Rio -&gt; Arena Grêmio (Custo 0.05)
+Neo-Quimica Arena -&gt; Allianz Arena (Custo 0.21)
+Arena Fonte Nova -&gt; Mineirão (Custo 8.79)
+Nilton Santos -&gt; Arena Red bull (Custo 3.25)
+Arena MRV -&gt; São Januário (Custo 3.06)
+Allianz Arena -&gt; Morumbis (Custo 0.08)
+Arena Pantanal -&gt; Antonio Accioly (Custo 6.92)
+Ligga Arena -&gt; Majestoso (Custo 3.24)
+Barradão -&gt; Arena Fonte Nova (Custo 0.10)
+São Januário -&gt; Maracanã (Custo 0.02)
+Alfredo Jaconi -&gt; Arena Pantanal (Custo 14.43)
+Majestoso -&gt; Beira-Rio (Custo 2.32)
+Arena Red bull -&gt; Neo-Quimica Arena (Custo 0.58)
+Antonio Accioly -&gt; Castelão (Custo 16.75)
+Custo Final: 73.06</code></pre>
+</div>
+</div>
 </section>
 </section>
 
